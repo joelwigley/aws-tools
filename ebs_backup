@@ -25,6 +25,11 @@ do
         # Populate two arrays, one contains the volume IDs to be snapshotted, and the second containing the names for use later.
         vol_ids[$counter]=$id
         vol_names[$counter]=$(aws ec2 describe-tags --region $region --filters "Name=resource-id,Values=$id" "Name=key,Values=Name" | jq '.Tags[].Value' | tr -d '"')
+	
+	# If the volume has no name, use the volume ID for the snapshot description instead
+	if [ -z ${vol_names[$counter]} ]; then
+		vol_names[$counter]=$id
+	fi
         ((counter++))
 done
 
