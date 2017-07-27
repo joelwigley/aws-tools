@@ -28,14 +28,15 @@ do
         ((counter++))
 done
 
-DATE=$(date +"%Y%m%d_%H%M")
+DESC_DATE=$(date +"%Y-%m-%d_%H:%M:%S")
+LOG_DATE=$(date +"%b %d %R:%S")
 
 process=0
 while [ $process -lt $counter ]
 do
-        Description="Automated - ${vol_names[$process]} snapshot - "${DATE}
+        Description="Automated - ${vol_names[$process]} snapshot - "${DESC_DATE}
 
-        echo "Creating snapshot of ${vol_names[$process]} on ${vol_ids[$process]} in $region with Description: ${Description}" >> /var/log/ec2backups.log
+        echo "$LOG_DATE Creating snapshot of ${vol_names[$process]} on ${vol_ids[$process]} in $region with Description: ${Description}" >> /var/log/ebs_backups.log
         aws ec2 create-snapshot --volume-id ${vol_ids[$process]} --description "${Description}" --region $region --output text >> /var/log/ec2snapshot.log
         ((process++))
 done
